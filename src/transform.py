@@ -10,8 +10,8 @@ def clean_data(rows):
 
         municipality = row["municipality"].strip().title()
         service = row["service"].strip().title()
-        area = row["area"].strip.title()
-        status = row["status"].strip.title()
+        area = row["area"].strip().title()
+        status = row["status"].strip().title()
 
         if not municipality:
             continue
