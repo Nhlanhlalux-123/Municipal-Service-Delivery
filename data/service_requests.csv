@@ -9,3 +9,9 @@ id,date,municipality,service,area,status
 8,2026-01-09,Ekurhuleni,Water,Benoni,Resolved
 9,2026-01-10,Tshwane,Electricity,Pretoria,Pending
 10,2026-01-10,Johannesburg,Sanitation,Soweto,Resolved
+11,2026-01-11,johannesburg,water,Soweto,resolved
+12,2026-01-11,Johannesburg, WATER ,Alexandra,Pending
+13,2026-01-12,,Electricity,Pretoria,Resolved
+14,2026-01-12,Tshwane,Refuse,,Pending
+15,2026-01-13,Johannesburg,Water,Soweto,Resolved
+15,2026-01-13,Johannesburg,Water,Soweto,Resolved
