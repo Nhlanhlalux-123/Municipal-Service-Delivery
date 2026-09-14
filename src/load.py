@@ -29,7 +29,7 @@ def load_data(rows):
     for row in rows:
         cursor.execute(""" 
             INSERT INTO service_requests
-            (id, date, micipality, service, area, status)
+            (id, date, municipality, service, area, status)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (
             row["id"],

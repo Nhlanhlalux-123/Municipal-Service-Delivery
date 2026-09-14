@@ -1,6 +1,7 @@
 import csv
 
 from transform import clean_data
+from load import create_database, load_data
 
 def extract_data():
     with open("data/service_requests.csv", "r") as file:
@@ -16,10 +17,10 @@ def main():
 
     print("Clean records:", len(cleaned_data))
 
-    print("\nCleaned data:")
+    create_database()
+    load_data(cleaned_data)
 
-    for row in cleaned_data:
-        print(row)
+    print("Data loaded successfully")
 
 if __name__ == "__main__":
     main()
