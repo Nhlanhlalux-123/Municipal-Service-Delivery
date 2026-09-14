@@ -1,0 +1,11 @@
+id,date,municipality,service,area,status
+1,2026-01-05,Johannesburg,Water,Soweto,Resolved
+2,2026-01-06,Johannesburg,Electricity,Alexandra,Pending
+3,2026-01-06,Tshwane,Refuse,Pretoria,Resolved
+4,2026-01-07,Johannesburg,Water,Roodepoort,Pending
+5,2026-01-08,Ekurhuleni,Electricity,Germiston,Resolved
+6,2026-01-08,Tshwane,Water,Soshanguve,Pending
+7,2026-01-09,Johannesburg,Refuse,Soweto,Resolved
+8,2026-01-09,Ekurhuleni,Water,Benoni,Resolved
+9,2026-01-10,Tshwane,Electricity,Pretoria,Pending
+10,2026-01-10,Johannesburg,Sanitation,Soweto,Resolved
