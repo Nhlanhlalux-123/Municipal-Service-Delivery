@@ -1,6 +1,7 @@
 from extract import extract_data
 from transform import clean_data
 from load import create_database, load_data
+from report import generate_report
 
 
 def main():
@@ -17,6 +18,8 @@ def main():
 
     print("Data loaded successfully.")
     print("Pipeline complete.")
+
+    generate_report()
 
 
 if __name__ == "__main__":
