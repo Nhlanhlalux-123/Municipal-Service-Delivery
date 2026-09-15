@@ -28,7 +28,7 @@ def load_data(rows):
 
     for row in rows:
         cursor.execute(""" 
-            INSERT INTO service_requests
+            INSERT OR IGNORE INTO service_requests
             (id, date, municipality, service, area, status)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (
