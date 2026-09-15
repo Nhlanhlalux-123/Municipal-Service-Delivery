@@ -1,7 +1,7 @@
 import csv
 
-with open("data/service_requests.csv", "r") as file:
-    reader = csv.DictReader(file)
+def extract_data():
+    with open("data/service_requests.csv", "r") as file:
+        reader = csv.DictReader(file)
 
-    for row in reader:
-        print(row)
+        return list(reader)
