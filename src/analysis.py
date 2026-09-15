@@ -32,6 +32,7 @@ def requests_by_municipality():
         GROUP BY municipality
         ORDER BY total_requests DESC
     """)
+    
     rows = cursor.fetchall()
 
     for row in rows:
@@ -39,7 +40,45 @@ def requests_by_municipality():
 
     connection.close()
 
+def requests_by_status():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(""" 
+        SELECT status, COUNT(*) AS total
+        FROM service_requests
+        GROUP BY status
+    """)
+
+    rows = cursor.fetchall()
+
+    for row in rows:
+        print(row)
+
+    connection.close()
+
+def resolution_rate():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(""" 
+        SELECT 
+            COUNT(*) AS total_requests,
+            SUM(CASE WHEN status = 'Resolved' THEN 1 ELSE 0 END)
+                AS resolved_requests
+        FROM service_requests
+    """)
+
+    total, resolved = cursor.fetchone()
+
+    rate = (resolved / total) * 100
+
+    print(f"Total requests: {total}")
+    print(f"Resolved requests: {resolved}")
+    print(f"Resolution rate: {rate:.2f}%")
+
+    connection.close()
 
 
 if __name__ == "__main__":
-    requests_by_municipality()
+    resolution_rate()
