@@ -1,84 +1,64 @@
-import sqlite3
+from database import get_connection
 
-DATABASE = "database/service_data.db"
-
-def get_connection():
-    return sqlite3.connect(DATABASE)
 
 def requests_by_service():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT service, COUNT(*)
-        FROM service_requests 
-        GROUP BY service
-    """)
+            cursor.execute("""
+                SELECT service, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY service
+                ORDER BY total DESC
+            """)
 
-    rows = cursor.fetchall()
+            rows = cursor.fetchall()
 
-    for row in rows:
-        print(row)
+            print("\nREQUESTS BY SERVICE")
 
-    connection.close()
+            for service, total in rows:
+                print(f"{service}: {total}")
+
 
 def requests_by_municipality():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT municipality, COUNT(*) AS total_requests
-        FROM service_requests
-        GROUP BY municipality
-        ORDER BY total_requests DESC
-    """)
-    
-    rows = cursor.fetchall()
+            cursor.execute("""
+                SELECT municipality, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY municipality
+                ORDER BY total DESC
+            """)
 
-    for row in rows:
-        print(row)
+            rows = cursor.fetchall()
 
-    connection.close()
+            print("\nREQUESTS BY MUNICIPALITY")
+
+            for municipality, total in rows:
+                print(f"{municipality}: {total}")
+
 
 def requests_by_status():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute(""" 
-        SELECT status, COUNT(*) AS total
-        FROM service_requests
-        GROUP BY status
-    """)
+            cursor.execute("""
+                SELECT status, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY status
+                ORDER BY total DESC
+            """)
 
-    rows = cursor.fetchall()
+            rows = cursor.fetchall()
 
-    for row in rows:
-        print(row)
+            print("\nREQUESTS BY STATUS")
 
-    connection.close()
-
-def resolution_rate():
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    cursor.execute(""" 
-        SELECT 
-            COUNT(*) AS total_requests,
-            SUM(CASE WHEN status = 'Resolved' THEN 1 ELSE 0 END)
-                AS resolved_requests
-        FROM service_requests
-    """)
-
-    total, resolved = cursor.fetchone()
-
-    rate = (resolved / total) * 100
-
-    print(f"Total requests: {total}")
-    print(f"Resolved requests: {resolved}")
-    print(f"Resolution rate: {rate:.2f}%")
-
-    connection.close()
+            for status, total in rows:
+                print(f"{status}: {total}")
 
 
 if __name__ == "__main__":
-    resolution_rate()
+    requests_by_service()
+    requests_by_municipality()
+    requests_by_status()

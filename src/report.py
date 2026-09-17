@@ -1,102 +1,79 @@
-import sqlite3
-
-DATABASE = "database/service_data.db"
-
-
-def get_connection():
-    return sqlite3.connect(DATABASE)
+from database import get_connection
 
 
 def get_total_requests():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM service_requests
-    """)
+            cursor.execute("""
+                SELECT COUNT(*)
+                FROM service_requests
+            """)
 
-    total = cursor.fetchone()[0]
-
-    connection.close()
-
-    return total
+            return cursor.fetchone()[0]
 
 
 def get_requests_by_service():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT service, COUNT(*) AS total
-        FROM service_requests
-        GROUP BY service
-        ORDER BY total DESC
-    """)
+            cursor.execute("""
+                SELECT service, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY service
+                ORDER BY total DESC
+            """)
 
-    results = cursor.fetchall()
-
-    connection.close()
-
-    return results
+            return cursor.fetchall()
 
 
 def get_requests_by_municipality():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT municipality, COUNT(*) AS total
-        FROM service_requests
-        GROUP BY municipality
-        ORDER BY total DESC
-    """)
+            cursor.execute("""
+                SELECT municipality, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY municipality
+                ORDER BY total DESC
+            """)
 
-    results = cursor.fetchall()
-
-    connection.close()
-
-    return results
+            return cursor.fetchall()
 
 
 def get_requests_by_status():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT status, COUNT(*) AS total
-        FROM service_requests
-        GROUP BY status
-    """)
+            cursor.execute("""
+                SELECT status, COUNT(*) AS total
+                FROM service_requests
+                GROUP BY status
+                ORDER BY total DESC
+            """)
 
-    results = cursor.fetchall()
-
-    connection.close()
-
-    return results
+            return cursor.fetchall()
 
 
 def get_resolution_rate():
-    connection = get_connection()
-    cursor = connection.cursor()
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        SELECT
-            COUNT(*) AS total,
-            SUM(
-                CASE
-                    WHEN status = 'Resolved' THEN 1
-                    ELSE 0
-                END
-            ) AS resolved
-        FROM service_requests
-    """)
+            cursor.execute("""
+                SELECT
+                    COUNT(*) AS total,
+                    SUM(
+                        CASE
+                            WHEN status = 'Resolved' THEN 1
+                            ELSE 0
+                        END
+                    ) AS resolved
+                FROM service_requests
+            """)
 
-    total, resolved = cursor.fetchone()
+            total, resolved = cursor.fetchone()
 
-    connection.close()
-
-    return (resolved / total) * 100
+            return (resolved / total) * 100
 
 
 def generate_report():
@@ -110,8 +87,8 @@ def generate_report():
     print("       MUNICIPAL SERVICE REPORT")
     print("=" * 45)
 
-    print(f"\nTOTAL REQUESTS")
-    print(f"{total}")
+    print("\nTOTAL REQUESTS")
+    print(total)
 
     print("\nREQUESTS BY SERVICE")
     print("-" * 25)
