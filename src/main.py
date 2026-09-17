@@ -16,10 +16,16 @@ def main():
 
     print("DATA QUALITY REPORT")
     print("-------------------")
-    print(f"Records extracted:  {quality_report['total_records']}")
-    print(f"Duplicate records:  {quality_report['duplicate_records']}")
-    print(f"Missing fields:     {quality_report['missing_fields']}")
-    print(f"Records loaded:     {quality_report['clean_records']}")
+    print(f"Records extracted: {quality_report['total_records']}")
+    print(f"Duplicate records: {quality_report['duplicate_records']}")
+    print(f"Missing fields:    {quality_report['missing_fields']}")
+    print(f"Records loaded:    {quality_report['clean_records']}")
+
+    print("\nREJECTED RECORDS")
+    print("----------------")
+
+    for record in quality_report["rejected_records"]:
+        print(f"ID: {record['id']} | Reason: {record['reason']}")
 
     print("\nPipeline complete.")
 
