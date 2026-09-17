@@ -81,6 +81,41 @@ class TestCleanData(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["id"], "1")
 
+    def test_reports_rejected_records(self):
+        rows = [
+            {
+                "id": "1",
+                "date": "2026-01-05",
+                "municipality": "",
+                "service": "Water",
+                "area": "Soweto",
+                "status": "Resolved"
+            },
+            {
+                "id": "2",
+                "date": "2026-01-06",
+                "municipality": "Johannesburg",
+                "service": "Water",
+                "area": "Soweto",
+                "status": "Resolved"
+            },
+            {
+                "id": "2",
+                "date": "2026-01-06",
+                "municipality": "Johannesburg",
+                "service": "Water",
+                "area": "Soweto",
+                "status": "Resolved"
+            }
+        ]
+
+        result, quality_report = clean_data(rows)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(quality_report["duplicate_records"], 1)
+        self.assertEqual(quality_report["missing_fields"], 1)
+        self.assertEqual(len(quality_report["rejected_records"]), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
