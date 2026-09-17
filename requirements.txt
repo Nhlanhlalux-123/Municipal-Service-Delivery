@@ -33,6 +33,8 @@ oauthlib==3.2.0
 pandas==2.3.3
 pop-transition==1.1.2
 protobuf==3.12.4
+psycopg==3.3.5
+psycopg-binary==3.3.5
 pycairo==1.20.1
 pycups==2.0.1
 pydbus==0.6.0
@@ -57,6 +59,7 @@ SecretStorage==3.3.1
 sessioninstaller==0.0.0
 six==1.16.0
 systemd-python==234
+typing_extensions==4.16.0
 tzdata==2026.4
 ubuntu-drivers-common==0.0.0
 ufw==0.36.1
