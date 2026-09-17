@@ -1,44 +1,37 @@
-import sqlite3
+from database import get_connection
 
-DATABASE = "database/service_data.db"
 
 def create_database():
-    connection = sqlite3.connect(DATABASE)
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor = connection.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS service_requests (
+                    id INTEGER PRIMARY KEY,
+                    date TEXT NOT NULL,
+                    municipality TEXT NOT NULL,
+                    service TEXT NOT NULL,
+                    area TEXT NOT NULL,
+                    status TEXT NOT NULL
+                )
+            """)
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS service_requests (
-        id INTEGER PRIMARY KEY,
-        date TEXT NOT NULL,
-        municipality TEXT NOT NULL,
-        service TEXT NOT NULL,
-        area TEXT NOT NULL,
-        status TEXT NOT NULL 
-        )
-    """)
-
-    connection.commit
-    connection.close()
 
 def load_data(rows):
-    connection = sqlite3.connect(DATABASE)
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
-    cursor = connection.cursor()
-
-    for row in rows:
-        cursor.execute(""" 
-            INSERT OR IGNORE INTO service_requests
-            (id, date, municipality, service, area, status)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (
-            row["id"],
-            row["date"],
-            row["municipality"],
-            row["service"],
-            row["area"],
-            row["status"]
-        ))
-
-    connection.commit()
-    connection.close()
+            for row in rows:
+                cursor.execute("""
+                    INSERT INTO service_requests
+                    (id, date, municipality, service, area, status)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (id) DO NOTHING
+                """, (
+                    row["id"],
+                    row["date"],
+                    row["municipality"],
+                    row["service"],
+                    row["area"],
+                    row["status"]
+                ))
