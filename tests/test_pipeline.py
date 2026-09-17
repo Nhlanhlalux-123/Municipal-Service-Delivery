@@ -28,7 +28,7 @@ class TestPipeline(unittest.TestCase):
             }
         ]
 
-        cleaned = clean_data(rows)
+        cleaned, _ = clean_data(rows)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             database = temp_file.name

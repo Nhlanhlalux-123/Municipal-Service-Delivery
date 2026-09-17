@@ -1,23 +1,27 @@
 from extract import extract_data
 from transform import clean_data
-from load import create_database, load_data
 from report import generate_report
+from load import create_database, load_data
 
 
 def main():
-    print("Starting data pipeline...")
+    print("Starting data pipeline...\n")
 
     raw_data = extract_data()
-    print(f"Extracted {len(raw_data)} records.")
 
-    cleaned_data = clean_data(raw_data)
-    print(f"Cleaned {len(cleaned_data)} records.")
+    cleaned_data, quality_report = clean_data(raw_data)
 
     create_database()
     load_data(cleaned_data)
 
-    print("Data loaded successfully.")
-    print("Pipeline complete.")
+    print("DATA QUALITY REPORT")
+    print("-------------------")
+    print(f"Records extracted:  {quality_report['total_records']}")
+    print(f"Duplicate records:  {quality_report['duplicate_records']}")
+    print(f"Missing fields:     {quality_report['missing_fields']}")
+    print(f"Records loaded:     {quality_report['clean_records']}")
+
+    print("\nPipeline complete.")
 
     generate_report()
 

@@ -17,7 +17,7 @@ class TestCleanData(unittest.TestCase):
             }
         ]
 
-        result = clean_data(rows)
+        result, _ = clean_data(rows)
 
         self.assertEqual(result[0]["municipality"], "Johannesburg")
         self.assertEqual(result[0]["service"], "Water")
@@ -36,7 +36,7 @@ class TestCleanData(unittest.TestCase):
             }
         ]
 
-        result = clean_data(rows)
+        result, _ = clean_data(rows)
 
         self.assertEqual(len(result), 0)
 
@@ -60,7 +60,7 @@ class TestCleanData(unittest.TestCase):
             }
         ]
 
-        result = clean_data(rows)
+        result, _ = clean_data(rows)
 
         self.assertEqual(len(result), 1)
 
@@ -76,7 +76,7 @@ class TestCleanData(unittest.TestCase):
             }
         ]
 
-        result = clean_data(rows)
+        result, _ = clean_data(rows)
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["id"], "1")
