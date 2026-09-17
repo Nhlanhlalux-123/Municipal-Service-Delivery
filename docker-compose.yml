@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: municipal-postgres
+    environment:
+      POSTGRES_DB: municipal_services
+      POSTGRES_USER: municipal_user
+      POSTGRES_PASSWORD: municipal_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
