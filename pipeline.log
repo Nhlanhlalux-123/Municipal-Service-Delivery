@@ -1,0 +1,527 @@
+ Image municipal-service-delivery-etl Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 600B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 215B done
+#2 DONE 0.0s
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/python:3.13-slim
+#4 DONE 1.5s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 95B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 938B done
+#6 DONE 0.0s
+
+#7 [1/6] FROM docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285
+#7 resolve docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285 0.0s done
+#7 DONE 0.0s
+
+#8 [3/6] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [2/6] WORKDIR /app
+#10 CACHED
+
+#11 [5/6] COPY src ./src
+#11 CACHED
+
+#12 [6/6] COPY data ./data
+#12 CACHED
+
+#13 exporting to image
+#13 exporting layers done
+#13 exporting manifest sha256:ef64d788df30ae8b46829a50ce2ad9c78dfa44518118c9b2b6e891fef428d60b done
+#13 exporting config sha256:19e864ce3642fd65cde1de5541ccd600fce4718a61df13e0c1f6ab47508e2857 done
+#13 exporting attestation manifest sha256:33ea9b907732c8f807d2d59d1d47660163809b6a1a807f5fac7d2d28f61545fd done
+#13 exporting manifest list sha256:98c6cfa34dda43bfb4e67fa70932da74fb35cbd9f1eb64b1b7c2aaa03b3151dc done
+#13 naming to docker.io/library/municipal-service-delivery-etl:latest done
+#13 unpacking to docker.io/library/municipal-service-delivery-etl:latest done
+#13 DONE 0.0s
+
+#14 resolving provenance for metadata file
+#14 DONE 0.0s
+ Image municipal-service-delivery-etl Built 
+ Container municipal-etl Recreate 
+ Container municipal-etl Recreated 
+Attaching to municipal-etl, municipal-postgres
+ Container municipal-postgres Starting 
+ Container municipal-postgres Started 
+ Container municipal-postgres Waiting 
+municipal-postgres  | 
+municipal-postgres  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+municipal-postgres  | 
+municipal-postgres  | 2026-09-18 09:20:03.679 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+municipal-postgres  | 2026-09-18 09:20:03.679 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+municipal-postgres  | 2026-09-18 09:20:03.679 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+municipal-postgres  | 2026-09-18 09:20:03.680 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+municipal-postgres  | 2026-09-18 09:20:03.684 UTC [32] LOG:  database system was shut down at 2026-09-18 09:13:31 UTC
+municipal-postgres  | 2026-09-18 09:20:03.688 UTC [1] LOG:  database system is ready to accept connections
+ Container municipal-postgres Healthy 
+ Container municipal-etl Starting 
+ Container municipal-etl Started 
+municipal-etl       | Starting data pipeline...
+municipal-etl       | 
+municipal-etl       | DATA QUALITY REPORT
+municipal-etl       | -------------------
+municipal-etl       | Records extracted: 16
+municipal-etl       | Duplicate records: 1
+municipal-etl       | Missing fields:    2
+municipal-etl       | Records loaded:    13
+municipal-etl       | 
+municipal-etl       | REJECTED RECORDS
+municipal-etl       | ----------------
+municipal-etl       | ID: 13 | Reason: Missing: municipality
+municipal-etl       | ID: 14 | Reason: Missing: area
+municipal-etl       | ID: 15 | Reason: Duplicate ID
+municipal-etl       | 
+municipal-etl       | Pipeline complete.
+municipal-etl       | 
+municipal-etl       | =============================================
+municipal-etl       |        MUNICIPAL SERVICE REPORT
+municipal-etl       | =============================================
+municipal-etl       | 
+municipal-etl       | TOTAL REQUESTS
+municipal-etl       | 13
+municipal-etl       | 
+municipal-etl       | REQUESTS BY SERVICE
+municipal-etl       | -------------------------
+municipal-etl       | Water           7
+municipal-etl       | Electricity     3
+municipal-etl       | Refuse          2
+municipal-etl       | Sanitation      1
+municipal-etl       | 
+municipal-etl       | REQUESTS BY MUNICIPALITY
+municipal-etl       | -------------------------
+municipal-etl       | Johannesburg    8
+municipal-etl       | Tshwane         3
+municipal-etl       | Ekurhuleni      2
+municipal-etl       | 
+municipal-etl       | REQUEST STATUS
+municipal-etl       | -------------------------
+municipal-etl       | Resolved        8
+municipal-etl       | Pending         5
+municipal-etl       | 
+municipal-etl       | RESOLUTION RATE
+municipal-etl       | -------------------------
+municipal-etl       | 61.54%
+municipal-etl       | 
+municipal-etl       | =============================================
+[Kmunicipal-etl exited with code 0
+ Compose Stopping Aborting on container exit...
+ Container municipal-etl Stopping 
+ Container municipal-etl Stopped 
+ Container municipal-postgres Stopping 
+municipal-postgres  | 2026-09-18 09:20:09.670 UTC [1] LOG:  received fast shutdown request
+municipal-postgres  | 2026-09-18 09:20:09.671 UTC [1] LOG:  aborting any active transactions
+municipal-postgres  | 2026-09-18 09:20:09.673 UTC [1] LOG:  background worker "logical replication launcher" (PID 35) exited with exit code 1
+municipal-postgres  | 2026-09-18 09:20:09.673 UTC [30] LOG:  shutting down
+municipal-postgres  | 2026-09-18 09:20:09.673 UTC [30] LOG:  checkpoint starting: shutdown immediate
+municipal-postgres  | 2026-09-18 09:20:09.678 UTC [30] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.006 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1C31940, redo lsn=0/1C31940
+municipal-postgres  | 2026-09-18 09:20:09.684 UTC [1] LOG:  database system is shut down
+ Container municipal-postgres Stopped 
+[Kmunicipal-postgres exited with code 0
+ Image municipal-service-delivery-etl Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 600B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 215B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.13-slim
+#3 DONE 1.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 95B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 938B done
+#5 DONE 0.0s
+
+#6 [1/6] FROM docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285
+#6 resolve docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285 0.0s done
+#6 DONE 0.0s
+
+#7 [5/6] COPY src ./src
+#7 CACHED
+
+#8 [2/6] WORKDIR /app
+#8 CACHED
+
+#9 [3/6] COPY requirements.txt .
+#9 CACHED
+
+#10 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+#10 CACHED
+
+#11 [6/6] COPY data ./data
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:ef64d788df30ae8b46829a50ce2ad9c78dfa44518118c9b2b6e891fef428d60b done
+#12 exporting config sha256:19e864ce3642fd65cde1de5541ccd600fce4718a61df13e0c1f6ab47508e2857 done
+#12 exporting attestation manifest sha256:9424a7340dee87e10555f94f7b37b0ae0f6d88bbebfcc22c9eab6f34ef5eb52e done
+#12 exporting manifest list sha256:e3d217ee1200afbf8e1f6cfee3d576136c29a2438315b2f1f0a07ff93a0897b0 done
+#12 naming to docker.io/library/municipal-service-delivery-etl:latest done
+#12 unpacking to docker.io/library/municipal-service-delivery-etl:latest done
+#12 DONE 0.0s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image municipal-service-delivery-etl Built 
+ Container municipal-etl Recreate 
+ Container municipal-etl Recreated 
+Attaching to municipal-etl, municipal-postgres
+ Container municipal-postgres Starting 
+ Container municipal-postgres Started 
+ Container municipal-postgres Waiting 
+municipal-postgres  | 
+municipal-postgres  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+municipal-postgres  | 
+municipal-postgres  | 2026-09-18 09:21:03.545 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+municipal-postgres  | 2026-09-18 09:21:03.545 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+municipal-postgres  | 2026-09-18 09:21:03.545 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+municipal-postgres  | 2026-09-18 09:21:03.546 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+municipal-postgres  | 2026-09-18 09:21:03.549 UTC [32] LOG:  database system was shut down at 2026-09-18 09:20:09 UTC
+municipal-postgres  | 2026-09-18 09:21:03.552 UTC [1] LOG:  database system is ready to accept connections
+ Container municipal-postgres Healthy 
+ Container municipal-etl Starting 
+ Container municipal-etl Started 
+municipal-etl       | Starting data pipeline...
+municipal-etl       | 
+municipal-etl       | DATA QUALITY REPORT
+municipal-etl       | -------------------
+municipal-etl       | Records extracted: 16
+municipal-etl       | Duplicate records: 1
+municipal-etl       | Missing fields:    2
+municipal-etl       | Records loaded:    13
+municipal-etl       | 
+municipal-etl       | REJECTED RECORDS
+municipal-etl       | ----------------
+municipal-etl       | ID: 13 | Reason: Missing: municipality
+municipal-etl       | ID: 14 | Reason: Missing: area
+municipal-etl       | ID: 15 | Reason: Duplicate ID
+municipal-etl       | 
+municipal-etl       | Pipeline complete.
+municipal-etl       | 
+municipal-etl       | =============================================
+municipal-etl       |        MUNICIPAL SERVICE REPORT
+municipal-etl       | =============================================
+municipal-etl       | 
+municipal-etl       | TOTAL REQUESTS
+municipal-etl       | 13
+municipal-etl       | 
+municipal-etl       | REQUESTS BY SERVICE
+municipal-etl       | -------------------------
+municipal-etl       | Water           7
+municipal-etl       | Electricity     3
+municipal-etl       | Refuse          2
+municipal-etl       | Sanitation      1
+municipal-etl       | 
+municipal-etl       | REQUESTS BY MUNICIPALITY
+municipal-etl       | -------------------------
+municipal-etl       | Johannesburg    8
+municipal-etl       | Tshwane         3
+municipal-etl       | Ekurhuleni      2
+municipal-etl       | 
+municipal-etl       | REQUEST STATUS
+municipal-etl       | -------------------------
+municipal-etl       | Resolved        8
+municipal-etl       | Pending         5
+municipal-etl       | 
+municipal-etl       | RESOLUTION RATE
+municipal-etl       | -------------------------
+municipal-etl       | 61.54%
+municipal-etl       | 
+municipal-etl       | =============================================
+[Kmunicipal-etl exited with code 0
+ Compose Stopping Aborting on container exit...
+ Container municipal-etl Stopping 
+ Container municipal-etl Stopped 
+ Container municipal-postgres Stopping 
+municipal-postgres  | 2026-09-18 09:21:09.552 UTC [1] LOG:  received fast shutdown request
+municipal-postgres  | 2026-09-18 09:21:09.553 UTC [1] LOG:  aborting any active transactions
+municipal-postgres  | 2026-09-18 09:21:09.554 UTC [1] LOG:  background worker "logical replication launcher" (PID 35) exited with exit code 1
+municipal-postgres  | 2026-09-18 09:21:09.554 UTC [30] LOG:  shutting down
+municipal-postgres  | 2026-09-18 09:21:09.555 UTC [30] LOG:  checkpoint starting: shutdown immediate
+municipal-postgres  | 2026-09-18 09:21:09.559 UTC [30] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.006 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1C319B8, redo lsn=0/1C319B8
+municipal-postgres  | 2026-09-18 09:21:09.564 UTC [1] LOG:  database system is shut down
+ Container municipal-postgres Stopped 
+[Kmunicipal-postgres exited with code 0
+ Image municipal-service-delivery-etl Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 600B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 215B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.13-slim
+#3 DONE 1.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 95B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 938B done
+#5 DONE 0.0s
+
+#6 [1/6] FROM docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285
+#6 resolve docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285 0.0s done
+#6 DONE 0.0s
+
+#7 [3/6] COPY requirements.txt .
+#7 CACHED
+
+#8 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [5/6] COPY src ./src
+#9 CACHED
+
+#10 [2/6] WORKDIR /app
+#10 CACHED
+
+#11 [6/6] COPY data ./data
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:ef64d788df30ae8b46829a50ce2ad9c78dfa44518118c9b2b6e891fef428d60b done
+#12 exporting config sha256:19e864ce3642fd65cde1de5541ccd600fce4718a61df13e0c1f6ab47508e2857 done
+#12 exporting attestation manifest sha256:e3b8281394e5a633b74818aee1768714c26f67c59b301a177d149f2037809f5c done
+#12 exporting manifest list sha256:f8915148fea3b77915d2ad4ab6631ab1b4784473d1387275d1d4326e84f4af58 done
+#12 naming to docker.io/library/municipal-service-delivery-etl:latest done
+#12 unpacking to docker.io/library/municipal-service-delivery-etl:latest done
+#12 DONE 0.0s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image municipal-service-delivery-etl Built 
+ Container municipal-etl Recreate 
+ Container municipal-etl Recreated 
+Attaching to municipal-etl, municipal-postgres
+ Container municipal-postgres Starting 
+ Container municipal-postgres Started 
+ Container municipal-postgres Waiting 
+municipal-postgres  | 
+municipal-postgres  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+municipal-postgres  | 
+municipal-postgres  | 2026-09-18 09:22:03.478 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+municipal-postgres  | 2026-09-18 09:22:03.478 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+municipal-postgres  | 2026-09-18 09:22:03.478 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+municipal-postgres  | 2026-09-18 09:22:03.480 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+municipal-postgres  | 2026-09-18 09:22:03.482 UTC [32] LOG:  database system was shut down at 2026-09-18 09:21:25 UTC
+municipal-postgres  | 2026-09-18 09:22:03.485 UTC [1] LOG:  database system is ready to accept connections
+ Container municipal-postgres Healthy 
+ Container municipal-etl Starting 
+ Container municipal-etl Started 
+municipal-etl       | Starting data pipeline...
+municipal-etl       | 
+municipal-etl       | DATA QUALITY REPORT
+municipal-etl       | -------------------
+municipal-etl       | Records extracted: 16
+municipal-etl       | Duplicate records: 1
+municipal-etl       | Missing fields:    2
+municipal-etl       | Records loaded:    13
+municipal-etl       | 
+municipal-etl       | REJECTED RECORDS
+municipal-etl       | ----------------
+municipal-etl       | ID: 13 | Reason: Missing: municipality
+municipal-etl       | ID: 14 | Reason: Missing: area
+municipal-etl       | ID: 15 | Reason: Duplicate ID
+municipal-etl       | 
+municipal-etl       | Pipeline complete.
+municipal-etl       | 
+municipal-etl       | =============================================
+municipal-etl       |        MUNICIPAL SERVICE REPORT
+municipal-etl       | =============================================
+municipal-etl       | 
+municipal-etl       | TOTAL REQUESTS
+municipal-etl       | 13
+municipal-etl       | 
+municipal-etl       | REQUESTS BY SERVICE
+municipal-etl       | -------------------------
+municipal-etl       | Water           7
+municipal-etl       | Electricity     3
+municipal-etl       | Refuse          2
+municipal-etl       | Sanitation      1
+municipal-etl       | 
+municipal-etl       | REQUESTS BY MUNICIPALITY
+municipal-etl       | -------------------------
+municipal-etl       | Johannesburg    8
+municipal-etl       | Tshwane         3
+municipal-etl       | Ekurhuleni      2
+municipal-etl       | 
+municipal-etl       | REQUEST STATUS
+municipal-etl       | -------------------------
+municipal-etl       | Resolved        8
+municipal-etl       | Pending         5
+municipal-etl       | 
+municipal-etl       | RESOLUTION RATE
+municipal-etl       | -------------------------
+municipal-etl       | 61.54%
+municipal-etl       | 
+municipal-etl       | =============================================
+[Kmunicipal-etl exited with code 0
+ Compose Stopping Aborting on container exit...
+ Container municipal-etl Stopping 
+ Container municipal-etl Stopped 
+ Container municipal-postgres Stopping 
+municipal-postgres  | 2026-09-18 09:22:09.421 UTC [1] LOG:  received fast shutdown request
+municipal-postgres  | 2026-09-18 09:22:09.422 UTC [1] LOG:  aborting any active transactions
+municipal-postgres  | 2026-09-18 09:22:09.424 UTC [1] LOG:  background worker "logical replication launcher" (PID 35) exited with exit code 1
+municipal-postgres  | 2026-09-18 09:22:09.424 UTC [30] LOG:  shutting down
+municipal-postgres  | 2026-09-18 09:22:09.424 UTC [30] LOG:  checkpoint starting: shutdown immediate
+municipal-postgres  | 2026-09-18 09:22:09.429 UTC [30] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.005 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1C31AA8, redo lsn=0/1C31AA8
+municipal-postgres  | 2026-09-18 09:22:09.435 UTC [1] LOG:  database system is shut down
+ Container municipal-postgres Stopped 
+[Kmunicipal-postgres exited with code 0
+ Image municipal-service-delivery-etl Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 600B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 215B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.13-slim
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 95B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 938B done
+#5 DONE 0.0s
+
+#6 [1/6] FROM docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285
+#6 resolve docker.io/library/python:3.13-slim@sha256:9d2e5553305c7c7b0097999bb17187c69b921ccd6bc9d40e4bb5ebe652c00285 0.0s done
+#6 DONE 0.0s
+
+#7 [3/6] COPY requirements.txt .
+#7 CACHED
+
+#8 [2/6] WORKDIR /app
+#8 CACHED
+
+#9 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/6] COPY src ./src
+#10 CACHED
+
+#11 [6/6] COPY data ./data
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:ef64d788df30ae8b46829a50ce2ad9c78dfa44518118c9b2b6e891fef428d60b done
+#12 exporting config sha256:19e864ce3642fd65cde1de5541ccd600fce4718a61df13e0c1f6ab47508e2857 done
+#12 exporting attestation manifest sha256:495f71b8b13d1137d15b501b70564b9c012707eef38290aff09514e6439da069 done
+#12 exporting manifest list sha256:2a67d5ee1dc0d6215d86d27c7cc5d3fc7c4d72e4f4748fca69c36081f13aab48 done
+#12 naming to docker.io/library/municipal-service-delivery-etl:latest done
+#12 unpacking to docker.io/library/municipal-service-delivery-etl:latest done
+#12 DONE 0.0s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image municipal-service-delivery-etl Built 
+ Container municipal-etl Recreate 
+ Container municipal-etl Recreated 
+Attaching to municipal-etl, municipal-postgres
+ Container municipal-postgres Starting 
+ Container municipal-postgres Started 
+ Container municipal-postgres Waiting 
+municipal-postgres  | 
+municipal-postgres  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+municipal-postgres  | 
+municipal-postgres  | 2026-09-18 09:23:03.058 UTC [1] LOG:  starting PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+municipal-postgres  | 2026-09-18 09:23:03.058 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+municipal-postgres  | 2026-09-18 09:23:03.058 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+municipal-postgres  | 2026-09-18 09:23:03.059 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+municipal-postgres  | 2026-09-18 09:23:03.062 UTC [32] LOG:  database system was shut down at 2026-09-18 09:22:09 UTC
+municipal-postgres  | 2026-09-18 09:23:03.064 UTC [1] LOG:  database system is ready to accept connections
+ Container municipal-postgres Healthy 
+ Container municipal-etl Starting 
+ Container municipal-etl Started 
+municipal-etl       | Starting data pipeline...
+municipal-etl       | 
+municipal-etl       | DATA QUALITY REPORT
+municipal-etl       | -------------------
+municipal-etl       | Records extracted: 16
+municipal-etl       | Duplicate records: 1
+municipal-etl       | Missing fields:    2
+municipal-etl       | Records loaded:    13
+municipal-etl       | 
+municipal-etl       | REJECTED RECORDS
+municipal-etl       | ----------------
+municipal-etl       | ID: 13 | Reason: Missing: municipality
+municipal-etl       | ID: 14 | Reason: Missing: area
+municipal-etl       | ID: 15 | Reason: Duplicate ID
+municipal-etl       | 
+municipal-etl       | Pipeline complete.
+municipal-etl       | 
+municipal-etl       | =============================================
+municipal-etl       |        MUNICIPAL SERVICE REPORT
+municipal-etl       | =============================================
+municipal-etl       | 
+municipal-etl       | TOTAL REQUESTS
+municipal-etl       | 13
+municipal-etl       | 
+municipal-etl       | REQUESTS BY SERVICE
+municipal-etl       | -------------------------
+municipal-etl       | Water           7
+municipal-etl       | Electricity     3
+municipal-etl       | Refuse          2
+municipal-etl       | Sanitation      1
+municipal-etl       | 
+municipal-etl       | REQUESTS BY MUNICIPALITY
+municipal-etl       | -------------------------
+municipal-etl       | Johannesburg    8
+municipal-etl       | Tshwane         3
+municipal-etl       | Ekurhuleni      2
+municipal-etl       | 
+municipal-etl       | REQUEST STATUS
+municipal-etl       | -------------------------
+municipal-etl       | Resolved        8
+municipal-etl       | Pending         5
+municipal-etl       | 
+municipal-etl       | RESOLUTION RATE
+municipal-etl       | -------------------------
+municipal-etl       | 61.54%
+municipal-etl       | 
+municipal-etl       | =============================================
+[Kmunicipal-etl exited with code 0
+ Compose Stopping Aborting on container exit...
+ Container municipal-etl Stopping 
+ Container municipal-etl Stopped 
+ Container municipal-postgres Stopping 
+municipal-postgres  | 2026-09-18 09:23:08.987 UTC [1] LOG:  received fast shutdown request
+municipal-postgres  | 2026-09-18 09:23:08.988 UTC [1] LOG:  aborting any active transactions
+municipal-postgres  | 2026-09-18 09:23:08.990 UTC [1] LOG:  background worker "logical replication launcher" (PID 35) exited with exit code 1
+municipal-postgres  | 2026-09-18 09:23:08.991 UTC [30] LOG:  shutting down
+municipal-postgres  | 2026-09-18 09:23:08.992 UTC [30] LOG:  checkpoint starting: shutdown immediate
+municipal-postgres  | 2026-09-18 09:23:08.996 UTC [30] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.006 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1C31B20, redo lsn=0/1C31B20
+municipal-postgres  | 2026-09-18 09:23:09.003 UTC [1] LOG:  database system is shut down
+ Container municipal-postgres Stopped 
+[Kmunicipal-postgres exited with code 0
