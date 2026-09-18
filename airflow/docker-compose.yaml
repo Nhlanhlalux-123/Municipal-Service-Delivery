@@ -88,6 +88,10 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/../data:/opt/airflow/project_data:ro
     - ${AIRFLOW_PROJ_DIR:-.}/../src:/opt/airflow/project_src:ro
+
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+    
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -339,8 +343,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-  extra_hosts:
-  - "host.docker.internal:host-gateway"
+  
 
 volumes:
   postgres-db-volume:
