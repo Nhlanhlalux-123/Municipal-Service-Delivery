@@ -11,3 +11,20 @@
 .env
 __pycache__/
 *.pyc
+# Python
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# SQLite
+*.db
+database/
+
+# Airflow
+airflow/logs/
+airflow/__pycache__/
+
+# Airflow runtime files
+airflow/.env
