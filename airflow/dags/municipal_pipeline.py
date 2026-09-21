@@ -75,44 +75,60 @@ def municipal_service_pipeline():
         load_data(service_requests)
 
     @task
-    def extract_weather_task():
-        from src.weather_extract import extract_weather
+    def extract_historical_weather_task():
+        from src.historical_weather_extract import (
+            extract_historical_weather,
+        )
 
-        rows = extract_weather()
+        rows = extract_historical_weather()
 
-        print(f"Extracted {len(rows)} weather records.")
+        print(
+            f"Extracted "
+            f"{len(rows)} historical weather records."
+        )
 
         return rows
 
 
     @task
-    def transform_weather_task(rows):
-        from src.weather_transform import transform_weather
+    def transform_historical_weather_task(rows):
+        from src.historical_weather_transform import (
+            transform_historical_weather,
+        )
 
-        transformed = transform_weather(rows)
+        transformed = transform_historical_weather(rows)
+
+        print(
+            f"Transformed "
+            f"{len(transformed)} historical weather records."
+        )
 
         return [
             row.to_dict()
             for row in transformed
-        ]   
+        ]
 
 
     @task
-    def load_weather_task(rows):
-        from src.models.weather_record import WeatherRecord
-        from src.weather_load import load_weather
+    def load_historical_weather_task(rows):
+        from src.historical_weather_load import (
+            load_historical_weather,
+        )
+        from src.models.historical_weather import (
+            HistoricalWeather,
+        )
 
         weather_records = [
-            WeatherRecord.from_dict(row)
+            HistoricalWeather.from_dict(row)
             for row in rows
         ]
 
-        load_weather(weather_records)
+        load_historical_weather(weather_records)
 
         print(
-            f"Loaded {len(weather_records)} weather records."
+            f"Loaded "
+            f"{len(weather_records)} historical weather records."
         )
-
 
     @task
     def report():
@@ -126,13 +142,13 @@ def municipal_service_pipeline():
 
     service_loaded = load_service_task(service_clean)
 
-    weather_raw = extract_weather_task()
+    historical_weather_raw = (extract_historical_weather_task())
 
-    weather_clean = transform_weather_task(weather_raw)
+    historical_weather_clean = (transform_historical_weather_task(historical_weather_raw))
 
-    weather_loaded = load_weather_task(weather_clean)
+    historical_weather_loaded = (load_historical_weather_task(historical_weather_clean))
 
-    [service_loaded, weather_loaded] >> report()
+    [service_loaded, historical_weather_loaded] >> report()
 
 
 municipal_service_pipeline()

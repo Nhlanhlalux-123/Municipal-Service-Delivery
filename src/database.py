@@ -1,6 +1,6 @@
 import psycopg
 
-from config import get_database_config
+from src.config import get_database_config
 
 
 def get_connection():
