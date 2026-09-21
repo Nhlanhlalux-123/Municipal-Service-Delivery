@@ -26,6 +26,60 @@ if PROJECT_SRC not in sys.path:
 def municipal_service_pipeline():
 
     @task
+    def extract_service_task():
+        from extract import extract_data
+
+        rows = extract_data()
+
+        print(f"Extracted {len(rows)} service records.")
+
+        return rows
+
+
+    @task
+    def transform_service_task(rows):
+        from transform import clean_data
+
+        cleaned_rows, quality_report = clean_data(rows)
+
+        print("\nDATA QUALITY REPORT")
+        print("-------------------")
+        print(
+            f"Records extracted: "
+            f"{quality_report['total_records']}"
+        )
+        print(
+            f"Duplicate records: "
+            f"{quality_report['duplicate_records']}"
+        )
+        print(
+            f"Missing fields: "
+            f"{quality_report['missing_fields']}"
+        )
+        print(
+            f"Records cleaned: "
+            f"{quality_report['clean_records']}"
+        )
+
+        for record in quality_report["rejected_records"]:
+            print(
+                f"Rejected ID {record['id']}: "
+                f"{record['reason']}"
+            )
+
+        return cleaned_rows
+
+
+    @task
+    def load_service_task(rows):
+        from load import create_database, load_data
+
+        create_database()
+        load_data(rows)
+
+        print(f"Loaded {len(rows)} service records.")
+
+    @task
     def extract_weather_task():
         from weather_extract import extract_weather
 
@@ -42,7 +96,10 @@ def municipal_service_pipeline():
 
         transformed = transform_weather(rows)
 
-        print(f"Transformed {len(transformed)} weather records.")
+        print(
+            f"Transformed "
+            f"{len(transformed)} weather records."
+        )
 
         return transformed
 
@@ -55,11 +112,26 @@ def municipal_service_pipeline():
 
         print(f"Loaded {len(rows)} weather records.")
 
+
+    @task
+    def report():
+        from report import generate_report
+
+        generate_report()
+
+    service_raw = extract_service_task()
+
+    service_clean = transform_service_task(service_raw)
+
+    service_loaded = load_service_task(service_clean)
+
     weather_raw = extract_weather_task()
 
     weather_clean = transform_weather_task(weather_raw)
 
     weather_loaded = load_weather_task(weather_clean)
-    
-[service_loaded, weather_loaded] >> report()
+
+    [service_loaded, weather_loaded] >> report()
+
+
 municipal_service_pipeline()
