@@ -54,12 +54,12 @@ class TestPipeline(unittest.TestCase):
                     (id, date, municipality, service, area, status)
                     VALUES (?, ?, ?, ?, ?, ?)
                 """, (
-                    row["id"],
-                    row["date"],
-                    row["municipality"],
-                    row["service"],
-                    row["area"],
-                    row["status"]
+                    row.id,
+                    row.date,
+                    row.municipality,
+                    row.service,
+                    row.area,
+                    row.status
                 ))
 
             connection.commit()

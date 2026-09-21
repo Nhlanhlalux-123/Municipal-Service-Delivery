@@ -1,4 +1,4 @@
-from database import get_connection
+from src.database import get_connection
 
 
 class WeatherRepository:
@@ -38,21 +38,17 @@ class WeatherRepository:
                         VALUES (%s, %s, %s, %s, %s, %s)
                         ON CONFLICT (municipality, observed_at)
                         DO UPDATE SET
-                            temperature =
-                                EXCLUDED.temperature,
-                            humidity =
-                                EXCLUDED.humidity,
-                            precipitation =
-                                EXCLUDED.precipitation,
-                            weather_code =
-                                EXCLUDED.weather_code
+                            temperature = EXCLUDED.temperature,
+                            humidity = EXCLUDED.humidity,
+                            precipitation = EXCLUDED.precipitation,
+                            weather_code = EXCLUDED.weather_code
                     """, (
-                        row["municipality"],
-                        row["time"],
-                        row["temperature"],
-                        row["humidity"],
-                        row["precipitation"],
-                        row["weather_code"],
+                        row.municipality,
+                        row.time,
+                        row.temperature,
+                        row.humidity,
+                        row.precipitation,
+                        row.weather_code,
                     ))
 
     def get_all(self):

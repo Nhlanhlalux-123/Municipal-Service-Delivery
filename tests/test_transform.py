@@ -19,10 +19,10 @@ class TestCleanData(unittest.TestCase):
 
         result, _ = clean_data(rows)
 
-        self.assertEqual(result[0]["municipality"], "Johannesburg")
-        self.assertEqual(result[0]["service"], "Water")
-        self.assertEqual(result[0]["area"], "Soweto")
-        self.assertEqual(result[0]["status"], "Resolved")
+        self.assertEqual(result[0].municipality, "Johannesburg")
+        self.assertEqual(result[0].service, "Water")
+        self.assertEqual(result[0].area, "Soweto")
+        self.assertEqual(result[0].status, "Resolved")
 
     def test_removes_rows_with_missing_municipality(self):
         rows = [
@@ -79,7 +79,7 @@ class TestCleanData(unittest.TestCase):
         result, _ = clean_data(rows)
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]["id"], "1")
+        self.assertEqual(result[0].id, 1)
 
     def test_reports_rejected_records(self):
         rows = [

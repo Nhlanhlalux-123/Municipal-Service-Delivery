@@ -42,42 +42,24 @@ def municipal_service_pipeline():
 
         cleaned_rows, quality_report = clean_data(rows)
 
-        print("\nDATA QUALITY REPORT")
-        print("-------------------")
-        print(
-            f"Records extracted: "
-            f"{quality_report['total_records']}"
-        )
-        print(
-            f"Duplicate records: "
-            f"{quality_report['duplicate_records']}"
-        )
-        print(
-            f"Missing fields: "
-            f"{quality_report['missing_fields']}"
-        )
-        print(
-            f"Records cleaned: "
-            f"{quality_report['clean_records']}"
-        )
-
-        for record in quality_report["rejected_records"]:
-            print(
-                f"Rejected ID {record['id']}: "
-                f"{record['reason']}"
-            )
-
-        return cleaned_rows
+        return [
+            row.to_dict()
+            for row in cleaned_rows
+        ]
 
 
     @task
     def load_service_task(rows):
+        from models.service_request import ServiceRequest
         from load import create_database, load_data
 
-        create_database()
-        load_data(rows)
+        service_requests = [
+            ServiceRequest.from_dict(row)
+            for row in rows
+        ]
 
-        print(f"Loaded {len(rows)} service records.")
+        create_database()
+        load_data(service_requests)
 
     @task
     def extract_weather_task():
@@ -96,21 +78,27 @@ def municipal_service_pipeline():
 
         transformed = transform_weather(rows)
 
-        print(
-            f"Transformed "
-            f"{len(transformed)} weather records."
-        )
-
-        return transformed
+        return [
+            row.to_dict()
+            for row in transformed
+        ]   
 
 
     @task
     def load_weather_task(rows):
+        from models.weather_record import WeatherRecord
         from weather_load import load_weather
 
-        load_weather(rows)
+        weather_records = [
+            WeatherRecord.from_dict(row)
+            for row in rows
+        ]
 
-        print(f"Loaded {len(rows)} weather records.")
+        load_weather(weather_records)
+
+        print(
+            f"Loaded {len(weather_records)} weather records."
+        )
 
 
     @task

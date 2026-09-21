@@ -1,4 +1,4 @@
-from database import get_connection
+from src.database import get_connection
 
 
 class ServiceRequestRepository:
@@ -35,12 +35,12 @@ class ServiceRequestRepository:
                         VALUES (%s, %s, %s, %s, %s, %s)
                         ON CONFLICT (id) DO NOTHING
                     """, (
-                        row["id"],
-                        row["date"],
-                        row["municipality"],
-                        row["service"],
-                        row["area"],
-                        row["status"],
+                        row.id,
+                        row.date,
+                        row.municipality,
+                        row.service,
+                        row.area,
+                        row.status,
                     ))
 
     def count(self):

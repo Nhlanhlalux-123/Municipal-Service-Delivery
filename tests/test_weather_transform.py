@@ -23,15 +23,15 @@ class TestWeatherTransform(unittest.TestCase):
 
         self.assertEqual(len(result), 1)
         self.assertEqual(
-            result[0]["municipality"],
+            result[0].municipality,
             "Johannesburg",
         )
         self.assertEqual(
-            result[0]["temperature"],
+            result[0].temperature,
             21.5,
         )
         self.assertEqual(
-            result[0]["humidity"],
+            result[0].humidity,
             45,
         )
 
