@@ -82,6 +82,7 @@ def generate_report():
     municipalities = get_requests_by_municipality()
     statuses = get_requests_by_status()
     resolution_rate = get_resolution_rate()
+    service_weather = get_service_weather_summary()
 
     print("\n" + "=" * 45)
     print("       MUNICIPAL SERVICE REPORT")
@@ -112,7 +113,45 @@ def generate_report():
     print("-" * 25)
     print(f"{resolution_rate:.2f}%")
 
+    print("\nSERVICE REQUESTS + CURRENT WEATHER")
+    print("-" * 50)
+
+    for municipality, requests, temperature, humidity, precipitation in service_weather:
+        print(  
+            f"{municipality:<15} "
+            f"Requests: {requests:<3} "
+            f"Temp: {temperature}°C "
+            f"Humidity: {humidity}% "
+            f"Rain: {precipitation}mm"
+        )
+
     print("\n" + "=" * 45)
+
+    
+
+def get_service_weather_summary():
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+
+            cursor.execute("""
+                SELECT
+                    s.municipality,
+                    COUNT(*) AS total_requests,
+                    w.temperature,
+                    w.humidity,
+                    w.precipitation
+                FROM service_requests s
+                JOIN weather_data w
+                    ON s.municipality = w.municipality
+                GROUP BY
+                    s.municipality,
+                    w.temperature,
+                    w.humidity,
+                    w.precipitation
+                ORDER BY total_requests DESC
+            """)
+
+            return cursor.fetchall()
 
 
 if __name__ == "__main__":
