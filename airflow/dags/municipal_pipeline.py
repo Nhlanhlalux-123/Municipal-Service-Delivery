@@ -5,10 +5,10 @@ import pendulum
 from airflow.sdk import dag, task
 
 
-PROJECT_SRC = "/opt/airflow/project_src"
+PROJECT_ROOT = "/opt/airflow/municipal_project"
 
-if PROJECT_SRC not in sys.path:
-    sys.path.append(PROJECT_SRC)
+if PROJECT_ROOT not in sys.path:
+    sys.path.append(PROJECT_ROOT)
 
 
 @dag(

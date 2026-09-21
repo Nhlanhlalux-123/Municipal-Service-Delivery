@@ -87,7 +87,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/../data:/opt/airflow/project_data:ro
-    - ${AIRFLOW_PROJ_DIR:-.}/../src:/opt/airflow/project_src:ro
+    - ${AIRFLOW_PROJ_DIR:-.}/..:/opt/airflow/municipal_project:ro
 
   extra_hosts:
     - "host.docker.internal:host-gateway"
