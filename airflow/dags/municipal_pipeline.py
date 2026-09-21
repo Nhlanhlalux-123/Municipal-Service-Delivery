@@ -27,7 +27,7 @@ def municipal_service_pipeline():
 
     @task
     def extract_service_task():
-        from extract import extract_data
+        from src.extract import extract_data
 
         rows = extract_data()
 
@@ -38,9 +38,22 @@ def municipal_service_pipeline():
 
     @task
     def transform_service_task(rows):
-        from transform import clean_data
+        from src.transform import clean_data
 
         cleaned_rows, quality_report = clean_data(rows)
+
+        print("\nDATA QUALITY REPORT")
+        print("-------------------")
+        print(f"Records extracted: {quality_report['total_records']}")
+        print(f"Duplicate records: {quality_report['duplicate_records']}")
+        print(f"Missing fields: {quality_report['missing_fields']}")
+        print(f"Records cleaned: {quality_report['clean_records']}")
+
+        for record in quality_report["rejected_records"]:
+            print(
+                f"Rejected ID {record['id']}: "
+                f"{record['reason']}"
+            )
 
         return [
             row.to_dict()
@@ -50,8 +63,8 @@ def municipal_service_pipeline():
 
     @task
     def load_service_task(rows):
-        from models.service_request import ServiceRequest
-        from load import create_database, load_data
+        from src.models.service_request import ServiceRequest
+        from src.load import create_database, load_data
 
         service_requests = [
             ServiceRequest.from_dict(row)
@@ -63,7 +76,7 @@ def municipal_service_pipeline():
 
     @task
     def extract_weather_task():
-        from weather_extract import extract_weather
+        from src.weather_extract import extract_weather
 
         rows = extract_weather()
 
@@ -74,7 +87,7 @@ def municipal_service_pipeline():
 
     @task
     def transform_weather_task(rows):
-        from weather_transform import transform_weather
+        from src.weather_transform import transform_weather
 
         transformed = transform_weather(rows)
 
@@ -86,8 +99,8 @@ def municipal_service_pipeline():
 
     @task
     def load_weather_task(rows):
-        from models.weather_record import WeatherRecord
-        from weather_load import load_weather
+        from src.models.weather_record import WeatherRecord
+        from src.weather_load import load_weather
 
         weather_records = [
             WeatherRecord.from_dict(row)
@@ -103,7 +116,7 @@ def municipal_service_pipeline():
 
     @task
     def report():
-        from report import generate_report
+        from src.report import generate_report
 
         generate_report()
 
