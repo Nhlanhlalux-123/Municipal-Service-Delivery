@@ -1,6 +1,6 @@
-from extract import extract_data
-from transform import clean_data
-from load import create_database, load_data
+from src.extract import extract_data
+from src.transform import clean_data
+from src.load import create_database, load_data
 
 
 def run_pipeline():

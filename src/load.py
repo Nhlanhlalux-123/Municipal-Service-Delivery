@@ -1,4 +1,4 @@
-from repositories.service_repository import (
+from src.repositories.service_repository import (
     ServiceRequestRepository,
 )
 

@@ -1,4 +1,4 @@
-from repositories.weather_repository import WeatherRepository
+from src.repositories.weather_repository import WeatherRepository
 
 
 repository = WeatherRepository()

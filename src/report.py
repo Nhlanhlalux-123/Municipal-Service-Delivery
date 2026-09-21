@@ -1,7 +1,7 @@
-from repositories.service_repository import (
+from src.repositories.service_repository import (
     ServiceRequestRepository,
 )
-from repositories.weather_repository import WeatherRepository
+from src.repositories.weather_repository import WeatherRepository
 
 
 service_repository = ServiceRequestRepository()
