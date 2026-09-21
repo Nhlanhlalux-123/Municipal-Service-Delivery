@@ -1,25 +1,25 @@
-import json
 from urllib.parse import urlencode
 from urllib.request import urlopen
+import json
 
 
 MUNICIPALITIES = {
     "Johannesburg": {
         "latitude": -26.2041,
-        "longitude": 28.0473
+        "longitude": 28.0473,
     },
     "Tshwane": {
         "latitude": -25.7479,
-        "longitude": 28.2293
+        "longitude": 28.2293,
     },
     "Ekurhuleni": {
         "latitude": -26.1778,
-        "longitude": 28.4428
-    }
+        "longitude": 28.4428,
+    },
 }
 
 
-def get_weather(municipality, latitude, longitude):
+def fetch_weather(municipality, latitude, longitude):
     parameters = {
         "latitude": latitude,
         "longitude": longitude,
@@ -29,7 +29,7 @@ def get_weather(municipality, latitude, longitude):
             "precipitation,"
             "weather_code"
         ),
-        "timezone": "Africa/Johannesburg"
+        "timezone": "Africa/Johannesburg",
     }
 
     url = (
@@ -38,39 +38,24 @@ def get_weather(municipality, latitude, longitude):
     )
 
     with urlopen(url) as response:
-        weather = json.loads(
+        return json.loads(
             response.read().decode("utf-8")
         )
 
-    current = weather["current"]
 
-    return {
-        "municipality": municipality,
-        "time": current["time"],
-        "temperature": current["temperature_2m"],
-        "humidity": current["relative_humidity_2m"],
-        "precipitation": current["precipitation"],
-        "weather_code": current["weather_code"]
-    }
-
-
-def get_all_weather():
+def extract_weather():
     results = []
 
     for municipality, coordinates in MUNICIPALITIES.items():
-        weather = get_weather(
+        weather = fetch_weather(
             municipality,
             coordinates["latitude"],
-            coordinates["longitude"]
+            coordinates["longitude"],
         )
 
-        results.append(weather)
+        results.append({
+            "municipality": municipality,
+            "current": weather["current"],
+        })
 
     return results
-
-
-if __name__ == "__main__":
-    weather_data = get_all_weather()
-
-    for weather in weather_data:
-        print(weather)

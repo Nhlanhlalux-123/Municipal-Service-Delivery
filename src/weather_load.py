@@ -1,8 +1,8 @@
-import psycopg
+from database import get_connection
 
 
-def load_weather(rows, database_config):
-    with psycopg.connect(**database_config) as connection:
+def create_weather_table():
+    with get_connection() as connection:
         with connection.cursor() as cursor:
 
             cursor.execute("""
@@ -16,6 +16,13 @@ def load_weather(rows, database_config):
                     PRIMARY KEY (municipality, observed_at)
                 )
             """)
+
+
+def load_weather(rows):
+    create_weather_table()
+
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
 
             for row in rows:
                 cursor.execute("""
@@ -40,7 +47,5 @@ def load_weather(rows, database_config):
                     row["temperature"],
                     row["humidity"],
                     row["precipitation"],
-                    row["weather_code"]
+                    row["weather_code"],
                 ))
-
-    print(f"Loaded {len(rows)} weather records.")
