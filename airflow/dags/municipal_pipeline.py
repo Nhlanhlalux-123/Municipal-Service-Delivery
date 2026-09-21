@@ -1,4 +1,3 @@
-import csv
 import os
 import sys
 
@@ -39,7 +38,10 @@ def get_database_config():
 def municipal_service_pipeline():
 
     @task
-    def extract():
+    def extract_services():
+
+        import csv
+
         file_path = (
             "/opt/airflow/project_data/"
             "service_requests.csv"
@@ -49,12 +51,12 @@ def municipal_service_pipeline():
             reader = csv.DictReader(file)
             rows = list(reader)
 
-        print(f"Extracted {len(rows)} records.")
+        print(f"Extracted {len(rows)} service records.")
 
         return rows
 
     @task
-    def transform(rows):
+    def transform_services(rows):
 
         from transform import clean_data
 
@@ -88,12 +90,11 @@ def municipal_service_pipeline():
         return cleaned_rows
 
     @task
-    def load(rows):
+    def load_services(rows):
 
         config = get_database_config()
 
         with psycopg.connect(**config) as connection:
-
             with connection.cursor() as cursor:
 
                 cursor.execute("""
@@ -108,10 +109,8 @@ def municipal_service_pipeline():
                 """)
 
                 for row in rows:
-
                     cursor.execute("""
-                        INSERT INTO service_requests
-                        (
+                        INSERT INTO service_requests (
                             id,
                             date,
                             municipality,
@@ -130,7 +129,27 @@ def municipal_service_pipeline():
                         row["status"]
                     ))
 
-        print(f"Loaded {len(rows)} records.")
+        print(f"Loaded {len(rows)} service records.")
+
+    @task
+    def extract_weather():
+
+        from weather_api import get_all_weather
+
+        weather = get_all_weather()
+
+        print(f"Extracted {len(weather)} weather records.")
+
+        return weather
+
+    @task
+    def load_weather(rows):
+
+        from weather_load import load_weather
+
+        config = get_database_config()
+
+        load_weather(rows, config)
 
     @task
     def report():
@@ -138,7 +157,6 @@ def municipal_service_pipeline():
         config = get_database_config()
 
         with psycopg.connect(**config) as connection:
-
             with connection.cursor() as cursor:
 
                 cursor.execute("""
@@ -146,7 +164,7 @@ def municipal_service_pipeline():
                     FROM service_requests
                 """)
 
-                total = cursor.fetchone()[0]
+                total_services = cursor.fetchone()[0]
 
                 cursor.execute("""
                     SELECT service, COUNT(*)
@@ -158,42 +176,51 @@ def municipal_service_pipeline():
                 services = cursor.fetchall()
 
                 cursor.execute("""
-                    SELECT status, COUNT(*)
-                    FROM service_requests
-                    GROUP BY status
-                    ORDER BY COUNT(*) DESC
+                    SELECT
+                        municipality,
+                        temperature,
+                        humidity,
+                        precipitation
+                    FROM weather_data
+                    ORDER BY municipality
                 """)
 
-                statuses = cursor.fetchall()
+                weather = cursor.fetchall()
 
-        print("\n" + "=" * 45)
+        print("\n" + "=" * 50)
         print("       MUNICIPAL SERVICE REPORT")
-        print("=" * 45)
+        print("=" * 50)
 
-        print(f"\nTOTAL REQUESTS")
-        print(total)
+        print("\nTOTAL SERVICE REQUESTS")
+        print(total_services)
 
         print("\nREQUESTS BY SERVICE")
-        print("-" * 25)
+        print("-" * 30)
 
         for service, count in services:
-            print(f"{service:<15} {count}")
+            print(f"{service:<20} {count}")
 
-        print("\nREQUEST STATUS")
-        print("-" * 25)
+        print("\nCURRENT WEATHER")
+        print("-" * 50)
 
-        for status, count in statuses:
-            print(f"{status:<15} {count}")
+        for municipality, temperature, humidity, precipitation in weather:
+            print(
+                f"{municipality:<15} "
+                f"{temperature}°C | "
+                f"Humidity: {humidity}% | "
+                f"Rain: {precipitation}mm"
+            )
 
-        print("\n" + "=" * 45)
+        print("\n" + "=" * 50)
 
-    raw_data = extract()
+    service_raw = extract_services()
+    service_clean = transform_services(service_raw)
+    service_loaded = load_services(service_clean)
 
-    cleaned_data = transform(raw_data)
+    weather_raw = extract_weather()
+    weather_loaded = load_weather(weather_raw)
 
-    load_task = load(cleaned_data)
-
-    load_task >> report()
+    [service_loaded, weather_loaded] >> report()
 
 
 municipal_service_pipeline()
