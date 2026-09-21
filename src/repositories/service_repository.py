@@ -115,3 +115,27 @@ class ServiceRequestRepository:
                     return 0.0
 
                 return (resolved / total) * 100
+
+    def get_service_weather_summary(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT
+                        s.id,
+                        s.date,
+                        s.municipality,
+                        s.service,
+                        s.area,
+                        s.status,
+                        h.temperature_mean,
+                        h.precipitation,
+                        h.weather_code
+                    FROM service_requests s
+                    JOIN historical_weather h
+                        ON s.municipality = h.municipality
+                    AND s.date::date = h.date
+                    ORDER BY s.date, s.id
+                """)
+
+                return cursor.fetchall()
