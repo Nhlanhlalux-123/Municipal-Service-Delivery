@@ -1,0 +1,117 @@
+from database import get_connection
+
+
+class ServiceRequestRepository:
+
+    def create_table(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS service_requests (
+                        id INTEGER PRIMARY KEY,
+                        date TEXT NOT NULL,
+                        municipality TEXT NOT NULL,
+                        service TEXT NOT NULL,
+                        area TEXT NOT NULL,
+                        status TEXT NOT NULL
+                    )
+                """)
+
+    def insert_many(self, rows):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                for row in rows:
+                    cursor.execute("""
+                        INSERT INTO service_requests (
+                            id,
+                            date,
+                            municipality,
+                            service,
+                            area,
+                            status
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        ON CONFLICT (id) DO NOTHING
+                    """, (
+                        row["id"],
+                        row["date"],
+                        row["municipality"],
+                        row["service"],
+                        row["area"],
+                        row["status"],
+                    ))
+
+    def count(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT COUNT(*)
+                    FROM service_requests
+                """)
+
+                return cursor.fetchone()[0]
+
+    def count_by_service(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT service, COUNT(*) AS total
+                    FROM service_requests
+                    GROUP BY service
+                    ORDER BY total DESC
+                """)
+
+                return cursor.fetchall()
+
+    def count_by_municipality(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT municipality, COUNT(*) AS total
+                    FROM service_requests
+                    GROUP BY municipality
+                    ORDER BY total DESC
+                """)
+
+                return cursor.fetchall()
+
+    def count_by_status(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT status, COUNT(*) AS total
+                    FROM service_requests
+                    GROUP BY status
+                    ORDER BY total DESC
+                """)
+
+                return cursor.fetchall()
+
+    def resolution_rate(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT
+                        COUNT(*) AS total,
+                        SUM(
+                            CASE
+                                WHEN status = 'Resolved' THEN 1
+                                ELSE 0
+                            END
+                        ) AS resolved
+                    FROM service_requests
+                """)
+
+                total, resolved = cursor.fetchone()
+
+                if total == 0:
+                    return 0.0
+
+                return (resolved / total) * 100
