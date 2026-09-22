@@ -1,16 +1,23 @@
 from dataclasses import asdict, dataclass
+from datetime import date
 
 
 @dataclass
 class HistoricalWeather:
     municipality: str
-    date: str
+    date: date
     temperature_mean: float
     precipitation: float
     weather_code: int
 
+    def __post_init__(self):
+        if isinstance(self.date, str):
+            self.date = date.fromisoformat(self.date)
+
     def to_dict(self):
-        return asdict(self)
+        data = asdict(self)
+        data["date"] = self.date.isoformat()
+        return data
 
     @classmethod
     def from_dict(cls, data):

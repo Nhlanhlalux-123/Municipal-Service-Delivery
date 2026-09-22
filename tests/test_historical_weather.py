@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 from src.historical_weather_transform import (
@@ -29,7 +30,7 @@ class TestHistoricalWeather(unittest.TestCase):
 
         self.assertEqual(
             result[0].date,
-            "2026-01-05",
+            datetime.date(2026, 1, 5),
         )
 
         self.assertEqual(

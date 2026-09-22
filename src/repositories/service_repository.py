@@ -10,13 +10,32 @@ class ServiceRequestRepository:
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS service_requests (
                         id INTEGER PRIMARY KEY,
-                        date TEXT NOT NULL,
+                        date DATE NOT NULL,
                         municipality TEXT NOT NULL,
                         service TEXT NOT NULL,
                         area TEXT NOT NULL,
                         status TEXT NOT NULL
                     )
                 """)
+
+                cursor.execute("""
+                    SELECT data_type
+                    FROM information_schema.columns
+                    WHERE table_name = 'service_requests'
+                    AND column_name = 'date'
+                """)
+
+                result = cursor.fetchone()
+
+                if result and result[0] in (
+                    "text",
+                    "character varying",
+                ):
+                    cursor.execute("""
+                        ALTER TABLE service_requests
+                        ALTER COLUMN date TYPE DATE
+                        USING date::date
+                    """)
 
     def insert_many(self, rows):
         with get_connection() as connection:
@@ -134,7 +153,7 @@ class ServiceRequestRepository:
                     FROM service_requests s
                     JOIN historical_weather h
                         ON s.municipality = h.municipality
-                    AND s.date::date = h.date
+                    AND s.date = h.date
                     ORDER BY s.date, s.id
                 """)
 
