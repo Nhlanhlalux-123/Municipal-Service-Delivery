@@ -1,12 +1,8 @@
 from src.repositories.service_repository import (
     ServiceRequestRepository,
 )
-from src.repositories.weather_repository import WeatherRepository
-
 
 service_repository = ServiceRequestRepository()
-weather_repository = WeatherRepository()
-
 
 def get_total_requests():
     return service_repository.count()
@@ -28,17 +24,12 @@ def get_resolution_rate():
     return service_repository.resolution_rate()
 
 
-def get_current_weather():
-    return weather_repository.get_all()
-
-
 def generate_report():
     total = get_total_requests()
     services = get_requests_by_service()
     municipalities = get_requests_by_municipality()
     statuses = get_requests_by_status()
     resolution_rate = get_resolution_rate()
-    weather = get_current_weather()
     service_weather = get_service_weather_summary()
     rain_summary = get_requests_by_municipality_and_rain()
 
@@ -70,25 +61,6 @@ def generate_report():
     print("\nRESOLUTION RATE")
     print("-" * 30)
     print(f"{resolution_rate:.2f}%")
-
-    print("\nCURRENT WEATHER")
-    print("-" * 50)
-
-    for (
-        municipality,
-        observed_at,
-        temperature,
-        humidity,
-        precipitation,
-        weather_code,
-    ) in weather:
-
-        print(
-            f"{municipality:<15} "
-            f"{temperature}°C | "
-            f"Humidity: {humidity}% | "
-            f"Rain: {precipitation}mm"
-        )
 
     print("\nSERVICE REQUESTS + HISTORICAL WEATHER")
     print("-" * 75)
