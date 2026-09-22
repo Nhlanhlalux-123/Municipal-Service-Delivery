@@ -15,16 +15,36 @@ __pycache__/
 __pycache__/
 *.pyc
 
-# Environment variables
+# Environment
 .env
 
-# SQLite
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Local databases
 *.db
-database/
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
 
 # Airflow
 airflow/logs/
-airflow/__pycache__/
-
-# Airflow runtime files
 airflow/.env
+
+# Docker
+docker-data/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
