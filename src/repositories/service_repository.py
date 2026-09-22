@@ -158,3 +158,27 @@ class ServiceRequestRepository:
                 """)
 
                 return cursor.fetchall()
+
+    def requests_by_municipality_and_rain(self):
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("""
+                    SELECT
+                        s.municipality,
+                        COUNT(*) AS total_requests,
+                        SUM(
+                            CASE
+                                WHEN h.precipitation > 0 THEN 1
+                                ELSE 0
+                            END
+                        ) AS rainy_day_requests
+                    FROM service_requests s
+                    JOIN historical_weather h
+                        ON s.municipality = h.municipality
+                    AND s.date = h.date
+                    GROUP BY s.municipality
+                    ORDER BY total_requests DESC
+                """)
+
+                return cursor.fetchall()
