@@ -39,6 +39,8 @@ def generate_report():
     statuses = get_requests_by_status()
     resolution_rate = get_resolution_rate()
     weather = get_current_weather()
+    service_weather = get_service_weather_summary()
+    rain_summary = get_requests_by_municipality_and_rain()
 
     print("\n" + "=" * 50)
     print("       MUNICIPAL SERVICE REPORT")
@@ -88,7 +90,48 @@ def generate_report():
             f"Rain: {precipitation}mm"
         )
 
+    print("\nSERVICE REQUESTS + HISTORICAL WEATHER")
+    print("-" * 75)
+
+    for (
+        request_id,
+        date,
+        municipality,
+        service,
+        area,
+        status,
+        temperature,
+        precipitation,
+        weather_code,
+    ) in service_weather:
+
+        print(
+            f"ID: {request_id:<3} "
+            f"{date} | "
+            f"{municipality:<15} | "
+            f"{service:<12} | "
+            f"{status:<8} | "
+            f"{temperature}°C | "
+            f"{precipitation}mm"
+        )
+
     print("\n" + "=" * 50)
+
+    print("\nSERVICE REQUESTS + RAINFALL")
+    print("-" * 60)
+
+    for municipality, total, rainy_days in rain_summary:
+        print(
+            f"{municipality:<15} "
+            f"Total: {total:<4} "
+            f"Rainy-day requests: {rainy_days}"
+        )
+
+def get_service_weather_summary():
+    return service_repository.get_service_weather_summary()
+
+def get_requests_by_municipality_and_rain():
+    return service_repository.requests_by_municipality_and_rain()
 
 if __name__ == "__main__":
     generate_report()
