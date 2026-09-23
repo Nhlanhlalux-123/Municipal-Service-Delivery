@@ -497,6 +497,54 @@ python3 -m src.report
 
 ---
 
+# Open PostgreSql
+
+Connect PostgreSql:
+
+```bash
+docker exec -it municipal-postgres psql \
+  -U municipal_user \
+  -d municipal_services
+```
+
+List tables:
+
+```bash
+\dt
+```
+
+Count rows in the clean data:
+
+```bash
+SELECT COUNT(*) FROM service_requests;
+```
+
+List 5 historical weather data:
+
+```bash
+SELECT * FROM historical_weather LIMIT 5;
+```
+
+Run Join:
+
+```bash
+SELECT
+    s.id,
+    s.date,
+    s.municipality,
+    s.service,
+    s.status,
+    h.temperature_mean,
+    h.precipitation
+FROM service_requests s
+JOIN historical_weather h
+    ON s.municipality = h.municipality
+   AND s.date = h.date
+ORDER BY s.date, s.id;
+```
+
+---
+
 # Run the Tests
 
 ```bash
@@ -665,3 +713,10 @@ Reporting
 ```
 
 The project can later be expanded into a larger Data Engineering portfolio project as new tools and concepts are learned.
+
+---
+# Verification code
+
+```
+WTC-6B9GW23X
+```
